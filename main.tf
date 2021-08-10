@@ -6,6 +6,13 @@ data "aws_subnet_ids" "main" {
   vpc_id = data.aws_vpc.main.id
 }
 
+data "aws_security_groups" "main" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.main.id]
+  }
+}
+
 data "aws_region" "current" {}
 
 data "aws_partition" "current" {}
