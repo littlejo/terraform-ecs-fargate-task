@@ -4,12 +4,12 @@ import boto3
 import json
 
 def lambda_handler(event, context):
-   client = boto3.client('ecs')
-   zip_s3 = "s3://littlejo-unzip/unzip.zip"
-   unzip_s3 = "s3://littlejo-unzip/toto/"
+   zip_s3 = event["src"]
+   unzip_s3 = event["dest"]
    subnets_list = ["${default_subnet}"]
    sg           = "${default_sg}"
    
+   client = boto3.client('ecs')
    response = client.run_task(
        cluster='unzip-cluster',
        count=1,
