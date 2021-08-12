@@ -76,9 +76,9 @@ module "this" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family                = var.family
-  container_definitions = module.this.json_map_encoded_list
-  network_mode          = "awsvpc"
+  family                   = var.family
+  container_definitions    = module.this.json_map_encoded_list
+  network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 256
   memory                   = 512
