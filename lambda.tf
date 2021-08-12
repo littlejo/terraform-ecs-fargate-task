@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "log" {
 
 data "aws_iam_policy_document" "ecs" {
   statement {
-    actions   = ["ecs:*"]
+    actions   = ["ecs:RunTask", "iam:PassRole"]
     resources = ["*"]
   }
 }
