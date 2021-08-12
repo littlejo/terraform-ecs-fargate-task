@@ -1,0 +1,6 @@
+
+
+terraform init
+terraform apply
+
+aws lambda invoke --function-name create_zip --payload $(echo '{"src":"s3://littlejo-unzip/unzip.zip", "dest":"s3://littlejo-unzip/toto/"}' | base64) out
