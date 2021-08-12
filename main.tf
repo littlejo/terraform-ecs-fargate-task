@@ -55,28 +55,28 @@ data "aws_iam_policy_document" "s3_task_permissions" {
 }
 
 resource "aws_ecs_cluster" "cluster" {
-  name = "unzip-cluster"
+  name = var.ecs_cluster_name
 }
 
 module "this" {
   source                       = "cloudposse/ecs-container-definition/aws"
-  container_name               = "unzip"
-  container_image              = "littlejo/unzip-s3:bash"
+  container_name               = var.container_name
+  container_image              = var.container_image
   container_memory             = 500
   container_memory_reservation = 100
   essential                    = true
   log_configuration = {
     logDriver = "awslogs"
     "options" = {
-      "awslogs-group"         = "/ecs-cluster/services/unzip",
+      "awslogs-group"         = var.awslogs_group,
       "awslogs-region"        = var.region,
-      "awslogs-stream-prefix" = "unzip"
+      "awslogs-stream-prefix" = var.container_name
     }
   }
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family                = "unzip-tf"
+  family                = var.family
   container_definitions = module.this.json_map_encoded_list
   network_mode          = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -87,17 +87,17 @@ resource "aws_ecs_task_definition" "this" {
 }
 
 resource "aws_iam_role" "execution" {
-  name               = "test-execution-role"
+  name               = "execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
 resource "aws_iam_role" "task" {
-  name               = "test-task-role"
+  name               = "task-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
 resource "aws_iam_role_policy" "log_agent" {
-  name   = "test-log-permissions"
+  name   = "log-permissions"
   role   = aws_iam_role.task.id
   policy = data.aws_iam_policy_document.task_permissions.json
 }
@@ -114,11 +114,6 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attach
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  name = "/ecs-cluster/services/unzip"
-
-  tags = {
-    Environment = "production"
-    Application = "serviceA"
-  }
+  name = var.awslogs_group
 }
 

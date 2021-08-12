@@ -3,6 +3,8 @@ data "template_file" "this" {
   vars = {
     default_sg      = data.aws_security_groups.main.ids[0]
     default_subnet  = tolist(data.aws_subnet_ids.main.ids)[0]
+    family          = "${var.family}:${aws_ecs_task_definition.this.revision}"
+    container_name   = var.container_name
   }
 }
 
@@ -50,7 +52,7 @@ resource "aws_iam_policy" "log" {
 
 resource "aws_iam_policy" "ecs" {
   name        = "lambda_ecs"
-  description = "Allow lambda to modify ecs"
+  description = "Allow lambda to run ecs task"
   policy = data.aws_iam_policy_document.ecs.json
 }
 
@@ -66,7 +68,7 @@ resource "aws_iam_role_policy_attachment" "ecs" {
 
 resource "aws_lambda_function" "this" {
   filename         = data.archive_file.this.output_path
-  function_name    = "create_zip"
+  function_name    = var.function_name
   role             = aws_iam_role.this.arn
   handler          = "lambda_function.lambda_handler"
   source_code_hash = data.archive_file.this.output_base64sha256

@@ -26,7 +26,7 @@ def lambda_handler(event, context):
        overrides={
            'containerOverrides': [
                {
-                   'name': "unzip",
+                   'name': "${container_name}",
                    'command': [
                        'unzip-s3.sh',
                        zip_s3,
@@ -36,7 +36,7 @@ def lambda_handler(event, context):
            ],
        },
        platformVersion='1.4.0',
-       taskDefinition='unzip-tf:1'
+       taskDefinition='${family}'
    )
    return {
        'statusCode': 200,
