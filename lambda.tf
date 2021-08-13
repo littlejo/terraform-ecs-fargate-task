@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 data "template_file" "this" {
   template = file("${path.module}/lambda/create_task.py.tpl")
   vars = {
@@ -18,7 +20,11 @@ data "archive_file" "this" {
 data "aws_iam_policy_document" "log" {
   statement {
     actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
-    resources = ["*"]
+    resources = ["arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${var.function_name}:*"]
+  }
+  statement {
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
   }
 }
 
