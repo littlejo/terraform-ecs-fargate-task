@@ -4,8 +4,7 @@ import boto3
 import json
 
 def lambda_handler(event, context):
-   zip_s3 = event["src"]
-   unzip_s3 = event["dest"]
+   cmd = event["cmd"].split(",")
    subnets_list = ["${default_subnet}"]
    sg           = "${default_sg}"
    
@@ -27,11 +26,7 @@ def lambda_handler(event, context):
            'containerOverrides': [
                {
                    'name': "${container_name}",
-                   'command': [
-                       'unzip-s3.sh',
-                       zip_s3,
-                       unzip_s3,
-                   ],
+                   'command': cmd,
                },
            ],
        },
