@@ -73,6 +73,5 @@ resource "aws_lambda_function" "this" {
   handler          = "lambda_function.lambda_handler"
   source_code_hash = data.archive_file.this.output_base64sha256
   timeout          = 30
-
-  runtime = "python3.8"
+  runtime          = "python3.8"
 }

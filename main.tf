@@ -21,7 +21,6 @@ data "aws_iam_policy_document" "assume_role_policy" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
-
     principals {
       type        = "Service"
       identifiers = ["ecs-tasks.amazonaws.com"]
@@ -31,10 +30,8 @@ data "aws_iam_policy_document" "assume_role_policy" {
 
 data "aws_iam_policy_document" "task_permissions" {
   statement {
-    effect = "Allow"
-
+    effect    = "Allow"
     resources = ["*"]
-
     actions = [
       "logs:CreateLogStream",
       "logs:PutLogEvents"
@@ -44,13 +41,9 @@ data "aws_iam_policy_document" "task_permissions" {
 
 data "aws_iam_policy_document" "s3_task_permissions" {
   statement {
-    effect = "Allow"
-
+    effect    = "Allow"
     resources = ["*"]
-
-    actions = [
-      "s3:*"
-    ]
+    actions   = ["s3:*"]
   }
 }
 
