@@ -4,9 +4,9 @@ import boto3
 import json
 
 def lambda_handler(event, context):
-   cmd = event["cmd"].split(",")
-   subnets_list = ["${default_subnet}"]
-   sg           = "${default_sg}"
+   cmd     = event["cmd"].split(",")
+   subnets = "${subnets}".split(",")
+   sg      = "${sg}".split(",")
    
    client = boto3.client('ecs')
    response = client.run_task(
@@ -15,10 +15,8 @@ def lambda_handler(event, context):
        launchType='FARGATE',
        networkConfiguration={
            'awsvpcConfiguration': {
-               'subnets': subnets_list,
-               'securityGroups': [
-                   sg,
-               ],
+               'subnets': subnets,
+               'securityGroups': sg,
                'assignPublicIp': 'ENABLED'
            }
        },

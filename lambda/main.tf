@@ -1,8 +1,8 @@
 data "template_file" "this" {
   template = file("${path.module}/create_task.py.tpl")
   vars = {
-    default_sg     = var.default_sg
-    default_subnet = var.default_subnet
+    sg             = var.sg
+    subnets        = var.subnets
     family         = var.family
     container_name = var.container_name
     cluster        = var.cluster

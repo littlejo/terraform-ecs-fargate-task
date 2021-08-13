@@ -54,7 +54,7 @@ module "lambda" {
   family         = "${var.family}:${aws_ecs_task_definition.this.revision}"
   container_name = var.container_name
   function_name  = var.lambda_function_name
-  default_sg     = data.aws_security_groups.main.ids[0]
-  default_subnet = tolist(data.aws_subnet_ids.main.ids)[0]
+  sg             = data.aws_security_groups.main.ids[0]
+  subnets        = join(",", tolist(data.aws_subnet_ids.main.ids))
   cluster        = var.ecs_cluster_name
 }

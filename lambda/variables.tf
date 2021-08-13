@@ -13,14 +13,14 @@ variable "container_name" {
   description = "name of container you want to launch"
 }
 
-variable "default_sg" {
+variable "sg" {
   type        = string
-  description = "id of security group you want to launch the container"
+  description = "ids of security groups you want to launch the container (separated by comma)"
 }
 
-variable "default_subnet" {
+variable "subnets" {
   type        = string
-  description = "id of subnet you want to launch the container"
+  description = "ids of subnets you want to launch the container (separated by comma)"
 }
 
 variable "cluster" {
