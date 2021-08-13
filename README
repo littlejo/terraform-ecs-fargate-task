@@ -1,6 +1,27 @@
+# Aim
 
+This module is dedicated to use ecs/fargate instead of lambda function to remove constraints like language choice, lambda timeout, etc.
 
-terraform init
-terraform apply
+The workflow is simple: a lambda launch an ecs/fargate task
 
-aws lambda invoke --function-name create_zip --payload $(echo '{"src":"s3://littlejo-unzip/unzip.zip", "dest":"s3://littlejo-unzip/toto/"}' | base64) out
+# Example
+
+This is an example of unzip a file from s3 bucket.
+
+To do that, you have to type:
+> terraform init
+> terraform apply
+
+You have to define where is your zip file and where you want to unzip:
+
+> SRC="s3://littlejo-unzip/unzip.zip"
+> DEST="s3://littlejo-unzip/toto/"
+
+Next you launch a lambda function:
+
+> aws lambda invoke --function-name create_zip --payload $(echo "{\"src\":\"$SRC\", \"dest\":\"$DEST\"}"| base64) out
+
+Finally you can see logs of lambda and your ecs task:
+
+> awslogs get /aws/lambda/create_zip
+> awslogs get /ecs-cluster/services/unzip
