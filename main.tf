@@ -13,40 +13,6 @@ data "aws_security_groups" "main" {
   }
 }
 
-data "aws_region" "current" {}
-
-data "aws_partition" "current" {}
-
-data "aws_iam_policy_document" "assume_role_policy" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "task_permissions" {
-  statement {
-    effect    = "Allow"
-    resources = ["*"]
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-  }
-}
-
-data "aws_iam_policy_document" "s3_task_permissions" {
-  statement {
-    effect    = "Allow"
-    resources = ["*"]
-    actions   = ["s3:*"]
-  }
-}
-
 resource "aws_ecs_cluster" "cluster" {
   name = var.ecs_cluster_name
 }
@@ -77,33 +43,6 @@ resource "aws_ecs_task_definition" "this" {
   memory                   = 512
   execution_role_arn       = aws_iam_role.execution.arn
   task_role_arn            = aws_iam_role.task.arn
-}
-
-resource "aws_iam_role" "execution" {
-  name               = "execution-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-}
-
-resource "aws_iam_role" "task" {
-  name               = "task-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-}
-
-resource "aws_iam_role_policy" "log_agent" {
-  name   = "log-permissions"
-  role   = aws_iam_role.task.id
-  policy = data.aws_iam_policy_document.task_permissions.json
-}
-
-resource "aws_iam_role_policy" "s3_agent" {
-  name   = "s3-permissions"
-  role   = aws_iam_role.task.id
-  policy = data.aws_iam_policy_document.s3_task_permissions.json
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attach" {
-  role       = aws_iam_role.execution.name
-  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 resource "aws_cloudwatch_log_group" "this" {
