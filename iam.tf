@@ -5,7 +5,8 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 locals {
-  logs_arn = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}"
+  logs_arn = "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}"
+  iam_arn = "arn:${data.aws_partition.current.partition}:iam::aws"
 }
 
 data "aws_iam_policy_document" "assume_role_policy" {
@@ -59,5 +60,5 @@ resource "aws_iam_role_policy" "s3_agent" {
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attach" {
   role       = aws_iam_role.execution.name
-  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  policy_arn = "${local.iam_arn}:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
