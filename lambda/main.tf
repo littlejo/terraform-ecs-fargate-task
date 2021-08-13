@@ -1,11 +1,15 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_region" "current" {}
+
+
 data "template_file" "this" {
-  template = file("${path.module}/lambda/create_task.py.tpl")
+  template = file("${path.module}/create_task.py.tpl")
   vars = {
-    default_sg     = data.aws_security_groups.main.ids[0]
-    default_subnet = tolist(data.aws_subnet_ids.main.ids)[0]
-    family         = "${var.family}:${aws_ecs_task_definition.this.revision}"
+    default_sg     = var.default_sg
+    default_subnet = var.default_subnet
+    #family         = "${var.family}:${aws_ecs_task_definition.this.revision}"
+    family         = var.family
     container_name = var.container_name
   }
 }

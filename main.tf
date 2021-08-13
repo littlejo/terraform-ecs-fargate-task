@@ -110,3 +110,11 @@ resource "aws_cloudwatch_log_group" "this" {
   name = var.awslogs_group
 }
 
+module "lambda" {
+  source         = "./lambda"
+  family         = "${var.family}:${aws_ecs_task_definition.this.revision}"
+  container_name = var.container_name
+  function_name  = var.function_name
+  default_sg     = data.aws_security_groups.main.ids[0]
+  default_subnet = tolist(data.aws_subnet_ids.main.ids)[0]
+}
