@@ -5,6 +5,7 @@ data "template_file" "this" {
     default_subnet = var.default_subnet
     family         = var.family
     container_name = var.container_name
+    cluster        = var.cluster
   }
 }
 

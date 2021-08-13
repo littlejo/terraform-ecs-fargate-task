@@ -13,10 +13,6 @@ data "aws_security_groups" "main" {
   }
 }
 
-resource "aws_ecs_cluster" "cluster" {
-  name = var.ecs_cluster_name
-}
-
 module "this" {
   source                       = "cloudposse/ecs-container-definition/aws"
   container_name               = var.container_name
@@ -49,6 +45,10 @@ resource "aws_cloudwatch_log_group" "this" {
   name = var.awslogs_group
 }
 
+resource "aws_ecs_cluster" "cluster" {
+  name = var.ecs_cluster_name
+}
+
 module "lambda" {
   source         = "./lambda"
   family         = "${var.family}:${aws_ecs_task_definition.this.revision}"
@@ -56,4 +56,5 @@ module "lambda" {
   function_name  = var.lambda_function_name
   default_sg     = data.aws_security_groups.main.ids[0]
   default_subnet = tolist(data.aws_subnet_ids.main.ids)[0]
+  cluster        = var.ecs_cluster_name
 }

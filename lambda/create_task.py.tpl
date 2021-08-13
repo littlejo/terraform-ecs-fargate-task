@@ -11,7 +11,7 @@ def lambda_handler(event, context):
    
    client = boto3.client('ecs')
    response = client.run_task(
-       cluster='unzip-cluster',
+       cluster='${cluster}',
        count=1,
        launchType='FARGATE',
        networkConfiguration={

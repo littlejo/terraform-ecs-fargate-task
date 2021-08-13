@@ -22,3 +22,8 @@ variable "default_subnet" {
   type        = string
   description = "id of subnet you want to launch the container"
 }
+
+variable "cluster" {
+  type        = string
+  description = "cluster name where you want to launch ecs task"
+}
