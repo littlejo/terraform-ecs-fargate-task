@@ -69,7 +69,7 @@ module "this" {
     logDriver = "awslogs"
     "options" = {
       "awslogs-group"         = var.awslogs_group,
-      "awslogs-region"        = var.region,
+      "awslogs-region"        = data.aws_region.current.name,
       "awslogs-stream-prefix" = var.container_name
     }
   }
