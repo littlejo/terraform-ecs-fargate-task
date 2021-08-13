@@ -35,18 +35,18 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "this" {
-  name               = "Lambda_role"
+  name_prefix        = "Lambda_role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
 resource "aws_iam_policy" "log" {
-  name        = "lambda_cloudwatch"
+  name_prefix = "lambda_cloudwatch"
   description = "Allow lambda to modify cloudwatch logs"
   policy      = data.aws_iam_policy_document.log.json
 }
 
 resource "aws_iam_policy" "ecs" {
-  name        = "lambda_ecs"
+  name_prefix = "lambda_ecs"
   description = "Allow lambda to run ecs task"
   policy      = data.aws_iam_policy_document.ecs.json
 }

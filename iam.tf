@@ -37,23 +37,23 @@ data "aws_iam_policy_document" "s3_task_permissions" {
 }
 
 resource "aws_iam_role" "execution" {
-  name               = "execution-role"
+  name_prefix        = "execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
 resource "aws_iam_role" "task" {
-  name               = "task-role"
+  name_prefix        = "task-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
 resource "aws_iam_role_policy" "log_agent" {
-  name   = "log-permissions"
+  name_prefix   = "log-permissions"
   role   = aws_iam_role.task.id
   policy = data.aws_iam_policy_document.task_permissions.json
 }
 
 resource "aws_iam_role_policy" "s3_agent" {
-  name   = "s3-permissions"
+  name_prefix   = "s3-permissions"
   role   = aws_iam_role.task.id
   policy = data.aws_iam_policy_document.s3_task_permissions.json
 }
