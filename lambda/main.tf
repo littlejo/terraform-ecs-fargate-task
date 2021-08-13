@@ -8,7 +8,6 @@ data "template_file" "this" {
   vars = {
     default_sg     = var.default_sg
     default_subnet = var.default_subnet
-    #family         = "${var.family}:${aws_ecs_task_definition.this.revision}"
     family         = var.family
     container_name = var.container_name
   }
